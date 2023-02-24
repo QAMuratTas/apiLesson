@@ -2,6 +2,8 @@ package getRequest;
 
 import baseURLs.JsonPlaceHolderBaseURL;
 import io.restassured.response.Response;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
@@ -37,9 +39,17 @@ specification.pathParams("todosPath","todos","idPath","2");
     //Step 3: Sen Request
     Response  response =given().
             spec(specification).when().get("/{todosPath}/{idPath}");
+
+
     response.prettyPrint();
+    //Step 4:
+
+    response.then().assertThat().statusCode(200).contentType("application/json");
 
 
+    response.then().assertThat().body("title",
+            Matchers.equalTo("quis ut nam facilis et officia qui"),
+            "completed", Matchers.equalTo(false),"userId",Matchers.equalTo(1));
 }
 
 

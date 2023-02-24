@@ -10,39 +10,71 @@ import static io.restassured.RestAssured.given;
 
 public class Get04 extends JsonPlaceHolderBaseURL {
 
+        /*
+         Given
+             https://jsonplaceholder.typicode.com/users   --> resources farklı
+         When
+              Kullanıcı GET Methodu ile Request Gönderir
+         Then
+             Status Code un "200" olduğunu Assert et
+         And
+             Content Type ın "application/json" olduğunu assert et
+         And
+             Data uzunluğunun 10 olduğunu assert ediniz.
+
+      */
+
+
     @Test
     public void get04(){
-         /*
-        Given
-            https://jsonplaceholder.typicode.com/users
-        When
-             Kullanıcı GET Methodu ile Request Gönderir
+
+        /*
+        1) Set URL
+        2) Set Expected ata
+        3) Send a Request
+        4) assertion
+         */
+
+
+
+        //Step 1:    https://jsonplaceholder.typicode.com/users
+        specification.pathParam("usersPath","users");
+
+
+        //Step 2: Expected data (ignored)
+
+
+        //Step 3: Send Request
+
+        Response response = given().
+                spec(specification).
+                when().
+                get("/{usersPath}");
+
+        response.prettyPrint();  // like syso
+
+
+        // Step 4: Assertion
+
+        /*
         Then
             Status Code un "200" olduğunu Assert et
 		And
             Content Type ın "application/json" olduğunu assert et
 		And
 		    Data uzunluğunun 10 olduğunu assert ediniz.
-
-     */
-
-        /*
-        1) Set URL
-        2) Set expected data
-        3) Send a Request
-        4) assertion
-
          */
-specification.pathParams("userpath","users");
+        response.
+                then().
+                assertThat().
+                statusCode(200).
+                contentType(ContentType.JSON).
+                body("id", Matchers.hasSize(10));
 
-Response response = given().spec(specification).when().get("/{userpath}");
-response.prettyPrint();
-response.then().assertThat().statusCode(200).
-        contentType(ContentType.JSON).
-        body("id", Matchers.equalTo("10"));
+
+
+
 
     }
-
-
 
 }

@@ -8,6 +8,7 @@ import java.util.*;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 
 public class Get08 extends SwapiApiBaseURL {
 
@@ -43,8 +44,8 @@ public class Get08 extends SwapiApiBaseURL {
     "edited": "2014-12-20T21:30:21.661000Z",
     "url": "https://swapi.dev/api/vehicles/4/"
 }
-​
-​
+
+
      */
 
     @Test
@@ -62,7 +63,9 @@ public class Get08 extends SwapiApiBaseURL {
         // Step 1: Set URL
         //https://swapi.dev/api/vehicles/4
 
-        specification.pathParams("vehiclesPath","vehicles", "idPath","4");
+        specification.pathParams("vehiclesPath","vehicles",
+                "idPath","4");
+
 
         //Step 2: Set Expected Data
 
@@ -124,12 +127,19 @@ public class Get08 extends SwapiApiBaseURL {
                 when().
                 get("/{vehiclesPath}/{idPath}");
 
-
+/*
         System.out.println("Response: " );
         response.prettyPrint();
 
+ */
+
 
         // Step 4: Assertion operations
+
+        /*
+
+        //1. Way
+
         response.then().assertThat().statusCode(200).
                 body("name",equalTo(expectedDataMap.get("name")),
                         "model",equalTo(expectedDataMap.get("model")),
@@ -142,6 +152,47 @@ public class Get08 extends SwapiApiBaseURL {
                         "cargo_capacity",equalTo(expectedDataMap.get("cargo_capacity")),
                         "films",equalTo(expectedDataMap.get("films")),
                         "pilots",equalTo(expectedDataMap.get("pilots")));
+
+         */
+
+
+        // 2. Way
+
+        Map<String, Object> actualData = response.as(HashMap.class);
+        System.out.println("Actual Data: " + actualData);
+
+        /*
+        GSON  ----> Deserializaiton
+
+        Deserializaiton  ---> Json objesini, JAVA obj ne convert etmek demektir.
+
+         */
+
+        assertEquals(expectedDataMap.get("name"),actualData.get("name"));
+        assertEquals(expectedDataMap.get("max_atmosphering_speed"),actualData.get("max_atmosphering_speed"));
+        assertEquals(expectedDataMap.get("cargo_capacity"),actualData.get("cargo_capacity"));
+        assertEquals(expectedDataMap.get("films"),expectedDataMap.get("films"));
+        assertEquals(expectedDataMap.get("passengers"),actualData.get("passengers"));
+        assertEquals(expectedDataMap.get("pilots"),actualData.get("pilots"));
+        assertEquals(expectedDataMap.get("edited"),actualData.get("edited"));
+        assertEquals(expectedDataMap.get("consumables"),actualData.get("consumables"));
+        assertEquals(expectedDataMap.get("created"),actualData.get("created"));
+        assertEquals(expectedDataMap.get("length"),actualData.get("length"));
+        assertEquals(expectedDataMap.get("url"),actualData.get("url"));
+        assertEquals(expectedDataMap.get("manufacturer"),actualData.get("manufacturer"));
+        assertEquals(expectedDataMap.get("crew"),actualData.get("crew"));
+        assertEquals(expectedDataMap.get("vehicle_class"),actualData.get("vehicle_class"));
+        assertEquals(expectedDataMap.get("cost_in_credits"),actualData.get("cost_in_credits"));
+        assertEquals(expectedDataMap.get("model"),actualData.get("model"));
+
+
+        // HOMEWORKS:
+
+        /*
+        JsonPath   ----- SoftAssert kullanarak çözümünü yapınız.
+         */
+
+        assertEquals(expectedDataMap,actualData);
 
 
     }

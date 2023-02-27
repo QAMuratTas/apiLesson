@@ -17,7 +17,6 @@ public class SwapiApiBaseURL {
                 setBaseUri("https://swapi.dev/api").
                 build();
 
+
     }
-
-
 }
